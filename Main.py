@@ -24,15 +24,18 @@ opzioni = menu()
 while(opzioni<1 or opzioni>4):
 	opzioni = menu()
 
+#nel caso in cui si digita 1 viene eseguito il first fit
 if opzioni==1:
+	#inizializzazione di variabili di statistica
 	framm_esterne = 0
 	frammEsterne = 0
 	count = 0
 	cCount = 0
+	#si effettuano i simulazioni
 	while (i<numSimulazioni):
 		stampa.write("Simulazione numero "+str(i+1))
 
-		dimMemoria = 1024 #default 1024
+		dimMemoria = 20480
 		memoria = AllocatoreMemoria(dimMemoria)
 
 		processiAttesa = creaProcessiAttesa()
@@ -52,7 +55,7 @@ if opzioni==1:
 		cCount+=count
 
 		i+=1
-	#stampa.write(str(cCount)+" "+str(frammEsterne))
+
 	cCount=(cCount*1.0/numSimulazioni*1.0)
 	frammEsterne=(frammEsterne*1.0/numSimulazioni*1.0)*100
 
@@ -60,16 +63,18 @@ if opzioni==1:
 	stampa.write("e la media di frammentazioni esterne e' "+str(round(frammEsterne,2))+"%\n")
 	
 			
-
+#nel caso in cui si digita 2 viene eseguito il best fit
 elif opzioni==2:
+	#inizializzazione di variabili di statistica
 	framm_esterne = 0
 	frammEsterne = 0
 	count = 0
 	cCount = 0
+	#si effettuano i simulazioni
 	while (i<numSimulazioni):
 		stampa.write("simulazione numero "+str(i+1))
 
-		dimMemoria = 1024 #default 1024
+		dimMemoria = 20480
 		memoria = AllocatoreMemoria(dimMemoria)
 
 		processiAttesa = creaProcessiAttesa()
@@ -90,24 +95,25 @@ elif opzioni==2:
 		cCount+=count
 
 		i+=1
-	#stampa.write(str(cCount)+" "+str(frammEsterne))
+
 	cCount=(cCount*1.0/numSimulazioni*1.0)
 	frammEsterne=(frammEsterne*1.0/numSimulazioni*1.0)*100
 
 	stampa.write("La media dei confronti effettuati dall'algoritmo best-fit e': "+str(cCount))
 	stampa.write("e la media di frammentazioni esterne e': "+str(round(frammEsterne,2))+"%\n")
 
-
-
+#nel caso in cui si digita 3 viene eseguito il worst fit
 elif opzioni==3:
+	#inizializzazione di variabili per le statistiche
 	framm_esterne = 0
 	frammEsterne = 0
 	count = 0
 	cCount = 0
+	#si effettuano i simulazioni
 	while (i<numSimulazioni):
 		stampa.write("simulazione numero "+str(i+1))
 
-		dimMemoria = 1024 #default 1024
+		dimMemoria = 20480
 		memoria = AllocatoreMemoria(dimMemoria)
 
 		processiAttesa = creaProcessiAttesa()
@@ -127,15 +133,16 @@ elif opzioni==3:
 		cCount+=count
 
 		i+=1
-	#stampa.write(str(cCount)+" "+str(frammEsterne))
+
 	cCount=(cCount*1.0/numSimulazioni*1.0)
 	frammEsterne=(frammEsterne*1.0/numSimulazioni*1.0)*100
 
 	stampa.write("La media dei confronti effettuati dall'algoritmo best-fit e': "+str(cCount))
 	stampa.write("e la media di frammentazioni esterne e': "+str(round(frammEsterne,2))+"%\n")
 
-
+#se si digita 4 vengono effettuati tutti gli algoritmi
 else:
+	#inizializzazione di variabili di statistica per tutti e tre gli algoritmi
 	framm_esterneF = 0
 	frammEsterneF = 0
 	countF = 0
@@ -149,10 +156,11 @@ else:
 	countW = 0
 	cCountW = 0
 
+	#si effettuano i simulazioni
 	while (i<numSimulazioni):
 		stampa.write("simulazione numero "+str(i+1))
 
-		dimMemoria = 20480 #default 1024
+		dimMemoria = 20480
 		memoria = AllocatoreMemoria(dimMemoria)
 
 		processiAttesa = creaProcessiAttesa()
@@ -167,9 +175,11 @@ else:
 		for j in range(0, len(processiAttesa)):
 			stampa.write("ingresso: "+str(processiAttesa[j].ingProcesso)+"\tdimensione: "+str(processiAttesa[j].dimProcesso)+"\ttempo esecuzione: "+str(processiAttesa[j].exProcesso))
 		
+		#copie della lista da poter utilizzare per best fit e worst fit
 		processiAttesa2 = copy.deepcopy(processiAttesa)
 		processiAttesa3 = copy.deepcopy(processiAttesa)
 
+		#calcolo delle statistiche
 		framm_esterneF, countF = firstFit(memoria, processiAttesa)
 		frammEsterneF+=framm_esterneF
 		cCountF+=countF
