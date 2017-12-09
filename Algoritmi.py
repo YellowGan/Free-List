@@ -10,11 +10,12 @@ from AllocatoreMemoria import *
 from File import *
 from Funzioni import *
 
+#funzione che permette di effettuare il first fit
 def firstFit(partizioni, processiAttesa):
 	numProcessiEsecuzione = len(processiAttesa)
 	cicli = 0
 
-	comodo = 0
+	x = 0
 	ver = 0
 	#inizializzazione della variabile del contatore di confronti dei vari algoritmi
 	count = 0
@@ -29,19 +30,20 @@ def firstFit(partizioni, processiAttesa):
 
 	stampa.write("\nFIRST FIT\n")
 
+	#controllo sulla presenza di processi in attesa
 	while len(processiAttesa)>0 or numProcessiEsecuzione>0:
 		decrementoEsecuzioneProcessi(processiEsecuzione)
 		l = verificaTerminazioneProcessi(partizioni, processiEsecuzione)
 		numProcessiEsecuzione -= l
 		if len(processiAttesa)>0:
 			confronti = 0
-			comodo = 0
+			x = 0
 			if(processiAttesa[0].ingProcesso <= cicli): #se il processo che deve entrare e' al giusto giro di clock
 				for i in range(0, len(partizioni.listaPartizioni)):
 					confronti+=1
 					if (partizioni.listaPartizioni[i].dimensionePartizione() >= processiAttesa[0].dimProcesso) and (partizioni.listaPartizioni[i].stato == False):
-						#operazione di inserimento
-						comodo = 1
+						#operazioni di inserimento
+						x = 1
 						processiEsecuzione.append(processiAttesa[0])
 						stampa.write("\nprocesso selezionato: "+str(processiAttesa[0].ingProcesso))
 						indice = len(processiEsecuzione)-1
@@ -51,8 +53,8 @@ def firstFit(partizioni, processiAttesa):
 						del processiAttesa[0]
 						break
 
-				if comodo == 0:
-					stampa.write("comodo non e' diventato 1")
+				if x == 0:
+					stampa.write("x non e' diventato 1")
 					falliti+=1
 					stampa.write("entro nella verifica della frammentazione")
 					ver=verificaFrammentazioneEsterna(processiAttesa[0].dimProcesso, partizioni)
@@ -77,15 +79,14 @@ def firstFit(partizioni, processiAttesa):
 
 	AllocatoreMemoria.freeList = []
 
-	#stampa.write("Il numero di confronti effettuati dall'algoritmo firstFit e' : "+str(count)+" con "+str(falliti)+" allocazioni fallite di cui "+str(framm_esterne)+"%  per frammentazioni esterne")
 	return framm_esterne, count
 
-
+#funzione che permette di effettuare il best fit
 def bestFit(partizioni, processiAttesa):
 	numProcessiEsecuzione = len(processiAttesa)
 	cicli = 0
 
-	comodo = 0
+	x = 0
 	ver = 0
 	#inizializzazione della variabile del contatore di confronti dei vari algoritmi
 	count = 0
@@ -101,6 +102,7 @@ def bestFit(partizioni, processiAttesa):
 
 	stampa.write("\nBEST FIT\n")
 
+	#verifica della presenza di processi in attesa
 	while len(processiAttesa)>0 or numProcessiEsecuzione>0:
 
 		valIndice = -1
@@ -112,7 +114,7 @@ def bestFit(partizioni, processiAttesa):
 
 		if len(processiAttesa)>0:
 			confronti = 0
-			comodo = 0
+			x = 0
 			if (processiAttesa[0].ingProcesso <= cicli): #se il processo che deve entrare e' al giusto giro di cicli
 				for i in range(0, len(partizioni.listaPartizioni)): 
 					confronti+=1
@@ -121,8 +123,8 @@ def bestFit(partizioni, processiAttesa):
 							valIndice = i
 							valConfronto = partizioni.listaPartizioni[i].dimensionePartizione()
 				if valIndice != -1:
-					#operazione di inserimento
-					comodo = 1
+					#operazioni di inserimento
+					x = 1
 					processiEsecuzione.append(processiAttesa[0])
 					stampa.write("\nprocesso selezionato: "+str(processiAttesa[0].ingProcesso))
 					indice = len(processiEsecuzione)-1
@@ -131,8 +133,8 @@ def bestFit(partizioni, processiAttesa):
 					stampaPartizioniMemoria(partizioni)
 					del processiAttesa[0]
 
-				if comodo == 0:
-					stampa.write("comodo non e' diventato 1")
+				if x == 0:
+					stampa.write("x non e' diventato 1")
 					falliti+=1
 					stampa.write("entro nella verifica della frammentazione")
 					ver=verificaFrammentazioneEsterna(processiAttesa[0].dimProcesso, partizioni)
@@ -156,14 +158,14 @@ def bestFit(partizioni, processiAttesa):
 
 	AllocatoreMemoria.freeList = []
 
-	#stampa.write("Il numero di confronti effettuati dall'algoritmo firstFit e' : "+str(count)+" con "+str(falliti)+" allocazioni fallite di cui "+str(framm_esterne)+"%  per frammentazioni esterne")
 	return framm_esterne, count
 
+#funzione che permette di effettuare il worst fit
 def worstFit(partizioni, processiAttesa):
 	numProcessiEsecuzione = len(processiAttesa)
 	cicli = 0
 
-	comodo = 0
+	x = 0
 	ver = 0
 	#inizializzazione della variabile del contatore di confronti dei vari algoritmi
 	count = 0
@@ -178,6 +180,7 @@ def worstFit(partizioni, processiAttesa):
 
 	stampa.write("\nWORST FIT\n")
 
+	#verifica della presenza di processi in attesa
 	while len(processiAttesa)>0 or numProcessiEsecuzione>0:
 
 		valIndice = -1
@@ -189,7 +192,7 @@ def worstFit(partizioni, processiAttesa):
 
 		if len(processiAttesa)>0:
 			confronti = 0
-			comodo = 0
+			x = 0
 			if (processiAttesa[0].ingProcesso <= cicli): #se il processo che deve entrare e' al giusto giro di cicli
 				for i in range(0, len(partizioni.listaPartizioni)): 
 					confronti+=1
@@ -198,8 +201,8 @@ def worstFit(partizioni, processiAttesa):
 							valIndice = i
 							valConfronto = partizioni.listaPartizioni[i].dimensionePartizione()
 				if valIndice != -1:
-					#operazione di inserimento
-					comodo = 1
+					#operazioni di inserimento
+					x = 1
 					processiEsecuzione.append(processiAttesa[0])
 					stampa.write("\nprocesso selezionato: "+str(processiAttesa[0].ingProcesso))
 					indice = len(processiEsecuzione)-1
@@ -207,8 +210,8 @@ def worstFit(partizioni, processiAttesa):
 					processiEsecuzione[indice].partizioneOccupata = partizioni.listaPartizioni[valIndice]
 					stampaPartizioniMemoria(partizioni)
 					del processiAttesa[0]
-				if comodo == 0:
-					stampa.write("comodo non e' diventato 1")
+				if x == 0:
+					stampa.write("x non e' diventato 1")
 					falliti+=1
 					stampa.write("entro nella verifica della frammentazione")
 					ver=verificaFrammentazioneEsterna(processiAttesa[0].dimProcesso, partizioni)
@@ -231,5 +234,4 @@ def worstFit(partizioni, processiAttesa):
 
 	AllocatoreMemoria.freeList = []
 
-	#stampa.write("Il numero di confronti effettuati dall'algoritmo firstFit e' : "+str(count)+" con "+str(falliti)+" allocazioni fallite di cui "+str(framm_esterne)+"%  per frammentazioni esterne")
 	return framm_esterne, count
